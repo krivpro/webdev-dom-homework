@@ -33,6 +33,14 @@
 
   <script>
     "use strict";
+
+    const inputNameEl = document.getElementById('inputName');
+    const inputCommentEl = document.getElementById('inputComment');
+
+    const sanitize = (value) => {
+      return value.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+    };
+
     const comments = [
       {
         name: "Глеб Фокин",
@@ -77,7 +85,9 @@
       const likeButtons = document.querySelectorAll(".like-button");
 
       for (const likeButton of likeButtons) {
-        likeButton.addEventListener("click", () => {
+        likeButton.addEventListener("click", (e) => {
+          e.stopPropagation();
+
           const index = likeButton.dataset.index;
           const comment = comments[index];
 
@@ -88,19 +98,32 @@
           renderComments();
         });
       }
+
+      const commentElements = document.querySelectorAll(".comment");
+
+      for (const commentElement of commentElements) {
+        commentElement.addEventListener("click", () => {
+          const currentComment = comments[commentElement.dataset.index];
+          inputCommentEl.value = `${currentComment.name}: ${currentComment.text}`;
+        });
+      }
     };
 
     renderComments();
 
-    const inputNameEl = document.getElementById('inputName');
-    const inputCommentEl = document.getElementById('inputComment');
     const buttonEl = document.getElementById('button');
 
     buttonEl.addEventListener('click', () => {
+
+      if (!inputNameEl.value || !inputCommentEl.value) {
+        alert("Заполните форму");
+        return;
+      }
+
       const newComment = {
-        name: inputNameEl.value,
+        name: sanitize(inputNameEl.value),
         date: new Date(),
-        text: inputCommentEl.value,
+        text: sanitize(inputCommentEl.value),
         likes: 0,
         isLiked: false,
       };
