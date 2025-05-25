@@ -9,40 +9,6 @@
   <body>
     <div class="container">
       <ul class="comments">
-        <!-- <li class="comment">
-          <div class="comment-header">
-            <div class="comment-user-name">Глеб Фокин</div>
-            <div class="comment-date">12.02.22 12:18</div>
-          </div>
-          <div class="comment-body">
-            <div class="comment-text">
-              Это будет первый комментарий на этой странице
-            </div>
-          </div>
-          <div class="comment-footer">
-            <div class="likes">
-              <span class="likes-counter">3</span>
-              <button class="like-button"></button>
-            </div>
-          </div>
-        </li>
-        <li class="comment">
-          <div class="comment-header">
-            <div class="comment-user-name">Варвара Н.</div>
-            <div class="comment-date">13.02.22 19:22</div>
-          </div>
-          <div class="comment-body">
-            <div class="comment-text">
-              Мне нравится как оформлена эта страница! ❤
-            </div>
-          </div>
-          <div class="comment-footer">
-            <div class="likes">
-              <span class="likes-counter">75</span>
-              <button class="like-button -active-like"></button>
-            </div>
-          </div>
-        </li> -->
       </ul>
       <div class="add-form">
         <input
@@ -67,17 +33,27 @@
 
   <script>
     "use strict";
-    // Код писать здесь
+
+    const inputNameEl = document.getElementById('inputName');
+    const inputCommentEl = document.getElementById('inputComment');
+
+    const sanitize = (value) => {
+      return value.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+    };
 
     const comments = [
       {
         name: "Глеб Фокин",
         date: new Date(),
         text: "Это будет первый комментарий на этой странице",
+        likes: 3,
+        isLiked: false,
       },{
         name: "Варвара Н.",
         date: new Date(),
         text: "Мне нравится как оформлена эта страница! ❤",
+        likes: 75,
+        isLiked: true,
       }
     ];
 
@@ -98,26 +74,58 @@
           </div>
           <div class="comment-footer">
             <div class="likes">
-              <span class="likes-counter">3</span>
-              <button class="like-button"></button>
+              <span class="likes-counter">${comment.likes}</span>
+              <button data-index="${index}" class="like-button ${comment.isLiked ? "-active-like" : ""}"></button>
             </div>
           </div>
         </li>
         `;
       }).join("");
+
+      const likeButtons = document.querySelectorAll(".like-button");
+
+      for (const likeButton of likeButtons) {
+        likeButton.addEventListener("click", (e) => {
+          e.stopPropagation();
+
+          const index = likeButton.dataset.index;
+          const comment = comments[index];
+
+          comment.likes = comment.isLiked ? comment.likes - 1 : comment.likes + 1;
+
+          comment.isLiked = !comment.isLiked;
+
+          renderComments();
+        });
+      }
+
+      const commentElements = document.querySelectorAll(".comment");
+
+      for (const commentElement of commentElements) {
+        commentElement.addEventListener("click", () => {
+          const currentComment = comments[commentElement.dataset.index];
+          inputCommentEl.value = `${currentComment.name}: ${currentComment.text}`;
+        });
+      }
     };
 
     renderComments();
 
-    const inputNameEl = document.getElementById('inputName');
-    const inputCommentEl = document.getElementById('inputComment');
     const buttonEl = document.getElementById('button');
 
     buttonEl.addEventListener('click', () => {
+
+      if (!inputNameEl.value || !inputCommentEl.value) {
+        alert("Заполните форму");
+        return;
+      }
+
       const newComment = {
-        name: inputNameEl.value,
+        name: sanitize(inputNameEl.value),
         date: new Date(),
-        text: inputCommentEl.value,
+        text: sanitize(inputCommentEl.value),
+        likes: 0,
+        isLiked: false,
       };
 
       comments.push(newComment);
