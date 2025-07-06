@@ -45,8 +45,14 @@ export const initAddListener = (renderComments) => {
             return
         }
 
+        document.querySelector('.form-loading').style.display = 'block'
+        document.querySelector('.add-form').style.display = 'none'
 
         postComment(sanitize(inputCommentEl.value), sanitize(inputNameEl.value)).then((data) => {
+
+            document.querySelector('.form-loading').style.display = 'none'
+            document.querySelector('.add-form').style.display = 'flex'
+
             updateComments(data)
             renderComments()
             inputNameEl.value = ""

@@ -3,6 +3,8 @@ import { updateComments } from './modules/comments.js'
 import { initAddListener } from './modules/initListeners.js'
 import { renderComments } from './modules/renderComments.js'
 
+document.querySelector(".comments").innerHTML = 'Пожалуйста дождитесь загрузки комментариев...'
+
 fetchComments().then(data => {
     updateComments(data)
     renderComments()
