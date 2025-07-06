@@ -40,10 +40,11 @@ export const initAddListener = (renderComments) => {
 
     buttonEl.addEventListener('click', () => {
 
-        if (!inputNameEl.value || !inputCommentEl.value) {
-        alert("Заполните форму")
-        return
+        if (!inputNameEl.value.trim() || !inputCommentEl.value.trim()) {
+            alert("Заполните форму")
+            return
         }
+
 
         postComment(sanitize(inputCommentEl.value), sanitize(inputNameEl.value)).then((data) => {
             updateComments(data)
