@@ -1,4 +1,4 @@
-import { postComment } from "./api.js"
+import { postComment, fetchComments } from "./api.js"
 import { comments, updateComments } from "./comments.js"
 import { sanitize } from "./sanitize.js"
 

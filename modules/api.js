@@ -1,4 +1,10 @@
-const host = 'https://wedev-api.sky.pro/api/v1/krivpro'
+const host = 'https://wedev-api.sky.pro/api/v2/krivpro'
+const authHost = 'https://wedev-api.sky.pro/api/krivpro'
+
+let token = ""
+export const setToken = (newToken) => {
+    token = newToken
+}
 
 export const fetchComments = () => {
     return fetch (host + '/comments')
@@ -23,6 +29,9 @@ export const fetchComments = () => {
 export const postComment = (text, name) => {
     return fetch(host + "/comments", {
         method: "POST",
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
         body: JSON.stringify({
             text,
             name,
@@ -41,7 +50,18 @@ export const postComment = (text, name) => {
             return response.json()
         }
     })
-    .then(() => {
-        return fetchComments()
+}
+
+export const login = (login, password) => {
+    return fetch(authHost + '/login', {
+        method: 'POST',
+        body: JSON.stringify({login: login, password: password}),
+    })
+}
+
+export const registration = (name, login, password) => {
+    return fetch(authHost, {
+        method: 'POST',
+        body: JSON.stringify({name: name, login: login, password: password}),
     })
 }

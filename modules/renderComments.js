@@ -2,9 +2,9 @@ import { comments } from "./comments.js";
 import { initLikeListeners, initReplyListeners } from "./initListeners.js";
 
 export const renderComments = () => {
-    const list = document.querySelector(".comments");
-
-    list.innerHTML = comments.map((comment, index) => {
+    const container = document.querySelector('.container');
+    
+    const commentsHTML = comments.map((comment, index) => {
     return `
     <li class="comment" data-index="${index}">
         <div class="comment-header">
@@ -26,6 +26,37 @@ export const renderComments = () => {
     `;
     }).join("");
 
-    initLikeListeners(renderComments);
-    initReplyListeners();
+    const addCommentsHtml = `
+      <div class="add-form">
+        <input
+          type="text"
+          class="add-form-name"
+          placeholder="Введите ваше имя"
+          id="inputName"
+        />
+        <textarea
+          type="textarea"
+          class="add-form-text"
+          placeholder="Введите ваш коментарий"
+          rows="4"
+          id="inputComment"
+        ></textarea>
+        <div class="add-form-row">
+          <button class="add-form-button" id="button">Написать</button>
+        </div>
+      </div>
+      <div class="form-loading">
+        Комментарий добавляется...
+      </div>`
+
+      const linkToLoginText = `<p>Чтобы отправить комментарий, <span class="link-login">войдите</span></p>`
+
+      const baseHtml = `
+      <ul class="comments">${commentsHTML}</ul>
+      ${linkToLoginText}`
+
+      container.innerHTML = baseHtml
+
+    // initLikeListeners(renderComments);
+    // initReplyListeners();
 };
