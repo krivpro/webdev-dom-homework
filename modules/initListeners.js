@@ -1,4 +1,4 @@
-import { postComment } from "./api.js"
+import { postComment, fetchComments } from "./api.js"
 import { comments, updateComments } from "./comments.js"
 import { sanitize } from "./sanitize.js"
 
@@ -48,7 +48,11 @@ export const initAddListener = (renderComments) => {
         document.querySelector('.form-loading').style.display = 'block'
         document.querySelector('.add-form').style.display = 'none'
 
-        postComment(sanitize(inputCommentEl.value), sanitize(inputNameEl.value)).then((data) => {
+        postComment(sanitize(inputCommentEl.value), sanitize(inputNameEl.value))
+        .then(() => {
+                return fetchComments()
+        })
+        .then((data) => {
 
             document.querySelector('.form-loading').style.display = 'none'
             document.querySelector('.add-form').style.display = 'flex'

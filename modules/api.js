@@ -28,7 +28,4 @@ export const postComment = (text, name) => {
             name,
         }),
     })
-    .then(() => {
-        return fetchComments()
-    })
 }
