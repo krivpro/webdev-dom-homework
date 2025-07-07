@@ -48,7 +48,8 @@ export const initAddListener = (renderComments) => {
         document.querySelector('.form-loading').style.display = 'block'
         document.querySelector('.add-form').style.display = 'none'
 
-        postComment(sanitize(inputCommentEl.value), sanitize(inputNameEl.value)).then((data) => {
+        postComment(sanitize(inputCommentEl.value), sanitize(inputNameEl.value)).then(
+            (data) => {
 
             document.querySelector('.form-loading').style.display = 'none'
             document.querySelector('.add-form').style.display = 'flex'
@@ -57,6 +58,30 @@ export const initAddListener = (renderComments) => {
             renderComments()
             inputNameEl.value = ""
             inputCommentEl.value = ""
+            },
+        ).catch((error) => {
+            document.querySelector('.form-loading').style.display = 'none'
+            document.querySelector('.add-form').style.display = 'flex'
+
+            if (error.message === 'Failed to fetch') {
+                alert('Проблемы с интернетом, повторите попытку позже')
+            }
+
+            if (error.message === 'Ошибка сервера') {
+                alert(error.message)
+            }
+
+            if (error.message === 'Неверный запрос') {
+                alert('Имя или комментарий слишком короткие')
+
+                inputNameEl.classList.add("error")
+                inputCommentEl.classList.add("error")
+
+                setTimeout(() => {
+                    inputNameEl.classList.remove("error")
+                    inputCommentEl.classList.remove("error")
+                }, 3000)
+            }
         })
     })
 }
