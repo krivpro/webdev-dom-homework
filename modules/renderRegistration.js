@@ -1,11 +1,11 @@
-import { registration, setToken, setName} from './api.js'
+import { registration, setToken, setName } from './api.js'
 import { fetchAndRenderComments } from '../index.js'
 import { renderLogin } from './renderLogin.js'
 
 export const renderRegistration = () => {
-    const container = document.querySelector('.container')
+  const container = document.querySelector('.container')
 
-    const loginHtml = `
+  const loginHtml = `
     <section class="add-form">
       <h1>Форма регистрации</h1>
       <input type="text" class="add-form-name" placeholder="Введите имя" id="name" required/>
@@ -17,24 +17,50 @@ export const renderRegistration = () => {
       </fieldset>
     </section>`
 
-    container.innerHTML = loginHtml
+  container.innerHTML = loginHtml
 
-    document.querySelector('.entry').addEventListener('click', () => {
-      renderLogin()
-    })
+  document.querySelector('.entry').addEventListener('click', () => {
+    renderLogin()
+  })
 
-    const nameEl = document.querySelector('#name')
-    const loginEl = document.querySelector('#login')
-    const passwordEl = document.querySelector('#password')
-    const submitButtonEl = document.querySelector('.button-main')
+  const nameEl = document.querySelector('#name')
+  const loginEl = document.querySelector('#login')
+  const passwordEl = document.querySelector('#password')
+  const submitButtonEl = document.querySelector('.button-main')
 
-    submitButtonEl.addEventListener('click', () => {
-      registration(nameEl.value, loginEl.value, passwordEl.value).then((response) => {
+  submitButtonEl.addEventListener('click', () => {
+    if (
+      !nameEl.value.trim() ||
+      !loginEl.value.trim() ||
+      !passwordEl.value.trim()
+    ) {
+      alert('Пожалуйста, заполните все поля')
+      nameEl.classList.add('error')
+      loginEl.classList.add('error')
+      passwordEl.classList.add('error')
+
+      setTimeout(() => {
+        nameEl.classList.remove('error')
+        loginEl.classList.remove('error')
+        passwordEl.classList.remove('error')
+      }, 3000)
+      return
+    }
+
+    registration(nameEl.value, loginEl.value, passwordEl.value)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Пользователь с таким логином уже существует или ошибка регистрации')
+        }
         return response.json()
-      }).then((data) => {
+      })
+      .then((data) => {
         setToken(data.user.token)
         setName(data.user.name)
         fetchAndRenderComments()
       })
-    })
+      .catch((error) => {
+        alert(error.message)
+      })
+  })
 }

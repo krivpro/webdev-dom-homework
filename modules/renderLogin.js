@@ -27,12 +27,32 @@ export const renderLogin = () => {
     const submitButtonEl = document.querySelector('.button-main')
 
     submitButtonEl.addEventListener('click', () => {
-      login(loginEl.value, passwordEl.value).then((response) => {
+    if (!loginEl.value.trim() || !passwordEl.value.trim()) {
+      alert('Пожалуйста, заполните все поля')
+      loginEl.classList.add('error')
+      passwordEl.classList.add('error')
+
+      setTimeout(() => {
+        loginEl.classList.remove('error')
+        passwordEl.classList.remove('error')
+      }, 3000)
+      return
+    }
+
+    login(loginEl.value, passwordEl.value)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Неверный логин или пароль')
+        }
         return response.json()
-      }).then((data) => {
+      })
+      .then((data) => {
         setToken(data.user.token)
         setName(data.user.name)
         fetchAndRenderComments()
       })
-    })
+      .catch((error) => {
+        alert(error.message)
+      })
+  })
 }
