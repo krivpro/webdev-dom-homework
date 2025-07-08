@@ -1,5 +1,8 @@
-import { comments } from "./comments.js";
-import { initLikeListeners, initReplyListeners } from "./initListeners.js";
+import { comments } from './comments.js'
+import { token, name } from './api.js'
+import { initLikeListeners, initReplyListeners } from './initListeners.js'
+import { renderLogin } from './renderLogin.js'
+import { initAddListener } from './initListeners.js'
 
 export const renderComments = () => {
     const container = document.querySelector('.container');
@@ -24,7 +27,7 @@ export const renderComments = () => {
         </div>
     </li>
     `;
-    }).join("");
+    }).join("")
 
     const addCommentsHtml = `
       <div class="add-form">
@@ -32,6 +35,8 @@ export const renderComments = () => {
           type="text"
           class="add-form-name"
           placeholder="Введите ваше имя"
+          readonly
+          value="${name}"
           id="inputName"
         />
         <textarea
@@ -53,10 +58,17 @@ export const renderComments = () => {
 
       const baseHtml = `
       <ul class="comments">${commentsHTML}</ul>
-      ${linkToLoginText}`
+      ${token ? addCommentsHtml : linkToLoginText}`
 
       container.innerHTML = baseHtml
 
-    // initLikeListeners(renderComments);
-    // initReplyListeners();
+      if (token) {
+        initLikeListeners(renderComments)
+        initReplyListeners()
+        initAddListener(renderComments)
+      } else {
+        document.querySelector('.link-login').addEventListener('click', () => {
+          renderLogin()
+        }) 
+      }
 };

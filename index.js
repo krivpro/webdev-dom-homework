@@ -1,13 +1,17 @@
 import { fetchComments } from './modules/api.js'
 import { updateComments } from './modules/comments.js'
-import { initAddListener } from './modules/initListeners.js'
 import { renderComments } from './modules/renderComments.js'
 
-// document.querySelector(".comments").innerHTML = 'Пожалуйста дождитесь загрузки комментариев...'
+export const fetchAndRenderComments = (isFirstLoading) => {
 
-fetchComments().then(data => {
-    updateComments(data)
-    renderComments()
-});
+    if (isFirstLoading) {
+        document.querySelector('.container').innerHTML = `<p>Пожалуйста дождитесь загрузки комментариев...</p>`
+    }
 
-initAddListener(renderComments)
+    fetchComments().then(data => {
+        updateComments(data)
+        renderComments()
+    })
+}
+
+fetchAndRenderComments(true)

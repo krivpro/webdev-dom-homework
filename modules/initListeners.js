@@ -48,7 +48,11 @@ export const initAddListener = (renderComments) => {
         document.querySelector('.form-loading').style.display = 'block'
         document.querySelector('.add-form').style.display = 'none'
 
-        postComment(sanitize(inputCommentEl.value), sanitize(inputNameEl.value)).then(
+        postComment(sanitize(inputCommentEl.value), sanitize(inputNameEl.value))
+        .then(() => {
+                return fetchComments()
+            })
+        .then(
             (data) => {
 
             document.querySelector('.form-loading').style.display = 'none'
