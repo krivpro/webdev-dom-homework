@@ -96,6 +96,7 @@ body {
     margin-top: 48px;
     display: flex;
     flex-direction: column;
+    gap: 20px;
   }
 
   .add-form-name,
@@ -107,8 +108,9 @@ body {
   }
 
   .add-form-name {
-    width: 300px;
+    width: 100%;
     padding: 11px 22px;
+    box-sizing: border-box;
   }
 
   .add-form-text {
@@ -135,3 +137,50 @@ body {
   .add-form-button:hover {
     opacity: 0.9;
   }
+
+  .add-form-button-main {
+    width: 100%;
+    margin-top: 24px;
+    font-size: 24px;
+    padding: 10px 20px;
+    background-color: #bcec30;
+    border: none;
+    border-radius: 18px;
+    cursor: pointer;
+  }
+
+  .add-form-button-link {
+    text-align: center;
+    padding-top: 22px;
+    color: #fff;
+    cursor: pointer;
+    border-bottom: inherit;
+  }
+
+  .add-form-button-exit {
+    width: 50px;
+    margin-left: auto;
+    font-size: 12px;
+    background-color: #acb78b;
+    border: none;
+    border-radius: 18px;
+    cursor: pointer;
+  }
+
+  .add-form-registry {
+    border: none;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+  }
+
+  .form-loading {
+    display: none;
+    margin-top: 20px;
+  }
+
+  .error {
+    background-color: #FFC3C3;
+    border: 1px solid #FF4242;
+  }
+
